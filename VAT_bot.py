@@ -12,6 +12,7 @@ class VatBot:
         logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
     def start(self, update, context):
+
         countries = [
             [
                 InlineKeyboardButton("\U0001F1E6\U0001F1F9 Austria", callback_data='AT'),
@@ -61,16 +62,22 @@ class VatBot:
         r_m = InlineKeyboardMarkup(countries)
 
         update.message.reply_text('Please choose country:', reply_markup=r_m)
+
         return COUNTRY
 
+
     def button(self, update, context):
+
         query = update.callback_query
         query.answer()
         query.edit_message_text(text="Selected " + query.data + " as country," + "\nnow please insert VAT number:")
         context.user_data["c_code"] = query.data
+
         return VAT
 
+
     def get_vat_info(self, update, context):
+
         print("VAT>>>>>>>>> " + str(update.message.text))
         print("COUNTRY>>>>> " + str(context.user_data["c_code"]))
         update.message.reply_text(utils.search_VAT(update.message.text, str(context.user_data["c_code"])))
@@ -78,15 +85,17 @@ class VatBot:
         return ConversationHandler.END
 
     def exit(self, update, context):
+
         user = update.message.from_user
         print("EXIT user>>>>> " + user.first_name)
         update.message.reply_text("Bye! Bye! " + user.first_name + " \U0001F917", reply_markup=ReplyKeyboardRemove())
+
         return ConversationHandler.END
+
 
     def credits(self, update, context):
 
-        update.message.reply_text("buciski@vivaldi.net \n\nhttps://github.com/buciski/monopattino")
-
+        update.message.reply_text("buciski@vivaldi.net \n\nhttps://github.com/buciski/repo_bot \n\nVAT FAQ: https://bit.ly/2Om2H2j \n\nVAT info: https://bit.ly/2OPl8vZ")
 
 
 if __name__ == "__main__":
