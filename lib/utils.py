@@ -5,7 +5,7 @@ from vat_validator.vies import check_vat
 def search_VAT(vat, country):
 
     VAT_info = check_vat(country, vat)
-    print("all info extracted-->> " + VAT_info)
+    print("all info extracted-->> " + str(VAT_info))
     if VAT_info.valid:
         return "NAME: " + str(VAT_info.name) + "\n\nADDRESS: " + str(VAT_info.address)
     else:
