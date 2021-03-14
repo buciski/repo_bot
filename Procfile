@@ -1,0 +1,1 @@
+web: python3 VAT_bot_heroku.py
