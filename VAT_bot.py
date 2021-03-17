@@ -9,7 +9,11 @@ from lib import utils
 class VatBot:
 
     def __init__(self):
-        logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+
+        logging.basicConfig(filename='VAT_bot.log',
+                            format='|%(asctime)s:%(msecs)d| [%(funcName)s] [%(levelname)s] - %(message)s',
+                            datefmt='%H:%M:%S',
+                            level=logging.INFO)
 
     def start(self, update, context):
 
@@ -65,40 +69,45 @@ class VatBot:
 
         return COUNTRY
 
-
     def button(self, update, context):
 
         query = update.callback_query
         query.answer()
-        query.edit_message_text(text="Selected " + query.data + " as country," + "\nnow please insert VAT number:")
+        query.edit_message_text(text='Selected ' + query.data + ' as country,' + '\nnow please insert VAT number:')
         context.user_data["c_code"] = query.data
 
         return VAT
 
-
     def get_vat_info(self, update, context):
 
-        print("VAT>>>>>>>>> " + str(update.message.text))
-        print("COUNTRY>>>>> " + str(context.user_data["c_code"]))
-        update.message.reply_text(utils.search_VAT(update.message.text, str(context.user_data["c_code"])))
+        user = update.message.from_user
+
+        logging.info('VAT     inserted by ' + str(user) + ' >>>>> ' + str(update.message.text))
+        logging.info('COUNTRY inserted by ' + str(user) + ' >>>>> ' + str(context.user_data["c_code"]))
+
+        update.message.reply_text(utils.search_VAT_API(update.message.text, str(context.user_data["c_code"])))
 
         return ConversationHandler.END
 
     def exit(self, update, context):
 
         user = update.message.from_user
-        print("EXIT user>>>>> " + user.first_name)
-        update.message.reply_text("Bye! Bye! " + user.first_name + " \U0001F917", reply_markup=ReplyKeyboardRemove())
+        logging.info('Exit user >>>>> ' + str(user.first_name))
+        update.message.reply_text('Bye! Bye! ' + user.first_name + ' \U0001F917', reply_markup=ReplyKeyboardRemove())
 
         return ConversationHandler.END
 
-
     def credits(self, update, context):
 
-        update.message.reply_text("buciski@vivaldi.net \n\nhttps://github.com/buciski/repo_bot \n\nVAT FAQ: https://bit.ly/2Om2H2j \n\nVAT info: https://bit.ly/2OPl8vZ")
+        update.message.reply_text('buciski@vivaldi.net '
+                                  '\n\nhttps://github.com/buciski/repo_bot '
+                                  '\n\nVAT FAQ: https://bit.ly/2Om2H2j '
+                                  '\n\nVAT info: https://bit.ly/2OPl8vZ')
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
+
+    # TODO: if there is a log file take it and...take care of it :)
 
     bot = VatBot()
     updater = Updater(token=sys.argv[1], use_context=True)
