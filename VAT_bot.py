@@ -12,7 +12,7 @@ class VatBot:
 
         logging.basicConfig(filename='VAT_bot.log',
                             format='|%(asctime)s:%(msecs)d| [%(funcName)s] [%(levelname)s] - %(message)s',
-                            datefmt='%H:%M:%S',
+                            datefmt='%d/%m %H:%M:%S',
                             level=logging.INFO)
 
     def start(self, update, context):
